@@ -308,7 +308,35 @@ class ExecutionList(TopologicalSort):
                     if is_output(blocked_node_id1):
                         return node_id
 
-        #TODO: this function should be improved
+        # General BFS to find the node closest to an output node
+        import collections
+
+        node_scores = {}
+        for node_id in node_list:
+            queue = collections.deque([(node_id, 0)])
+            visited = {node_id}
+            min_dist = float('inf')
+
+            while queue:
+                curr, dist = queue.popleft()
+                if is_output(curr):
+                    min_dist = dist
+                    break
+
+                if curr in self.blocking:
+                    for blocked_node in self.blocking[curr]:
+                        if blocked_node not in visited:
+                            visited.add(blocked_node)
+                            queue.append((blocked_node, dist + 1))
+
+            if min_dist != float('inf'):
+                node_scores[node_id] = min_dist
+
+        if node_scores:
+            # Sort by distance to output (ascending)
+            sorted_nodes = sorted(node_scores.items(), key=lambda x: x[1])
+            return sorted_nodes[0][0]
+
         return node_list[0]
 
     def unstage_node_execution(self):
