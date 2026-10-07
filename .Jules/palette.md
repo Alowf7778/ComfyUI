@@ -1,0 +1,3 @@
+## 2024-10-07 - Execution Queue Node Picking UX Enhancement
+**Learning:** Found an opportunity to improve the backend's heuristic for picking the next node to execute. Previously, the logic only checked 1 or 2 hops for output nodes using hardcoded `VAELoader -> VAEDecode -> preview` pathways. Generalized this logic using a Breadth-First Search (BFS) to prioritize any node path that leads to an output node fastest. This gives the user faster visual feedback overall.
+**Action:** Implemented a BFS approach in `comfy_execution/graph.py` inside `ux_friendly_pick_node` replacing the `#TODO` placeholder.
